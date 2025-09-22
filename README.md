@@ -1,6 +1,6 @@
 # Swagr
 
-A React Native mobile application built with Expo that enables marketing professionals to manage yearly contact lists for Improving Inc. employees across different enterprises. The app provides secure authentication, year-based contact organization, delivery tracking with timestamps, and comment management.
+A React Native mobile application built with Expo that enables me to maintain a yearly contact lists that I use for handing out swag for my business. The app provides secure authentication, year-based contact organization, delivery tracking with timestamps, and comment management.
 
 ## Features
 
@@ -14,6 +14,7 @@ A React Native mobile application built with Expo that enables marketing profess
 ## Tech Stack
 
 - **Frontend**: Expo SDK with React Native
+- **Package Manager**: pnpm
 - **Authentication**: Firebase Authentication
 - **Database**: Firebase Firestore
 - **State Management**: React Context API with useReducer
@@ -26,8 +27,8 @@ A React Native mobile application built with Expo that enables marketing profess
 
 Before you begin, ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v16 or later)
-- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/)
+- [Node.js](https://nodejs.org/) (v18 or later)
+- [pnpm](https://pnpm.io/) (v8 or later) - Fast, disk space efficient package manager
 - [Expo CLI](https://docs.expo.dev/get-started/installation/)
 - [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) (for development)
 
@@ -43,9 +44,7 @@ Before you begin, ensure you have the following installed:
 2. Install dependencies:
 
    ```bash
-   npm install
-   # or
-   yarn install
+   pnpm install
    ```
 
 3. Set up Firebase:
@@ -66,17 +65,13 @@ Before you begin, ensure you have the following installed:
 Start the development server:
 
 ```bash
-npm start
-# or
-yarn start
+pnpm start
 ```
 
 Run on iOS simulator:
 
 ```bash
-npm run ios
-# or
-yarn ios
+pnpm ios
 ```
 
 ## Project Structure
@@ -122,17 +117,13 @@ service cloud.firestore {
 Run the test suite:
 
 ```bash
-npm test
-# or
-yarn test
+pnpm test
 ```
 
 Run tests in watch mode:
 
 ```bash
-npm run test:watch
-# or
-yarn test:watch
+pnpm test:watch
 ```
 
 ## Building
@@ -140,9 +131,7 @@ yarn test:watch
 Build for production:
 
 ```bash
-npm run build
-# or
-yarn build
+pnpm build
 ```
 
 ## Contributing

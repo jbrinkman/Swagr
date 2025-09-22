@@ -118,8 +118,8 @@ git commit -s -m "docs: update README with setup instructions"
 3. **Test Your Changes**
 
    ```bash
-   npm test
-   npm run lint
+   pnpm test
+   pnpm lint
    ```
 
 4. **Commit Your Changes**

@@ -31,6 +31,7 @@ graph TB
 ### Technology Stack
 
 - **Frontend**: Expo SDK with React Native
+- **Package Manager**: pnpm (for faster, more efficient dependency management)
 - **Authentication**: Firebase Authentication
 - **Database**: Firebase Firestore
 - **State Management**: React Context API with useReducer
