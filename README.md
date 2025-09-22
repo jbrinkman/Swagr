@@ -1,4 +1,4 @@
-# Marketing Checklist App
+# Swagr
 
 A React Native mobile application built with Expo that enables marketing professionals to manage yearly contact lists for Improving Inc. employees across different enterprises. The app provides secure authentication, year-based contact organization, delivery tracking with timestamps, and comment management.
 
@@ -36,8 +36,8 @@ Before you begin, ensure you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/jbrinkman/marketing-checklist-app.git
-   cd marketing-checklist-app
+   git clone https://github.com/jbrinkman/Swagr.git
+   cd Swagr
    ```
 
 2. Install dependencies:
@@ -155,4 +155,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-If you encounter any issues or have questions, please file an issue on the [GitHub repository](https://github.com/jbrinkman/marketing-checklist-app/issues).
+If you encounter any issues or have questions, please file an issue on the [GitHub repository](https://github.com/jbrinkman/Swagr/issues).
