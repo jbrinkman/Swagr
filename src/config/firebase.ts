@@ -1,25 +1,102 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getAuth, Auth, connectAuthEmulator } from "firebase/auth";
+import {
+  getFirestore,
+  Firestore,
+  connectFirestoreEmulator,
+} from "firebase/firestore";
 
 // Firebase configuration
-// TODO: Replace with your actual Firebase config
+// In production, these should be set via environment variables or Expo config
 const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-auth-domain",
-  projectId: "your-project-id",
-  storageBucket: "your-storage-bucket",
-  messagingSenderId: "your-messaging-sender-id",
-  appId: "your-app-id",
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY || "your-api-key",
+  authDomain:
+    process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN || "your-auth-domain",
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || "your-project-id",
+  storageBucket:
+    process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET || "your-storage-bucket",
+  messagingSenderId:
+    process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
+    "your-messaging-sender-id",
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID || "your-app-id",
+};
+
+// Validate configuration
+const validateFirebaseConfig = () => {
+  const requiredFields = [
+    "apiKey",
+    "authDomain",
+    "projectId",
+    "storageBucket",
+    "messagingSenderId",
+    "appId",
+  ];
+  const missingFields = requiredFields.filter(
+    (field) =>
+      !firebaseConfig[field as keyof typeof firebaseConfig] ||
+      firebaseConfig[field as keyof typeof firebaseConfig]
+        ?.toString()
+        .startsWith("your-")
+  );
+
+  if (missingFields.length > 0) {
+    console.warn(
+      "Firebase configuration incomplete. Missing or placeholder values for:",
+      missingFields
+    );
+    console.warn(
+      "Please set proper environment variables or update the configuration."
+    );
+  }
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
 
-// Initialize Firebase Authentication and get a reference to the service
-export const auth = getAuth(app);
+try {
+  // Validate configuration
+  validateFirebaseConfig();
 
-// Initialize Cloud Firestore and get a reference to the service
-export const db = getFirestore(app);
+  // Initialize Firebase app
+  app = initializeApp(firebaseConfig);
 
+  // Initialize Firebase Authentication
+  auth = getAuth(app);
+
+  // Initialize Cloud Firestore
+  db = getFirestore(app);
+
+  // Connect to emulators in development if available
+  if (__DEV__ && process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATOR === "true") {
+    try {
+      // Connect to Auth emulator
+      if (!auth._delegate._config.emulator) {
+        connectAuthEmulator(auth, "http://localhost:9099");
+      }
+
+      // Connect to Firestore emulator
+      if (!db._delegate._databaseId.projectId.includes("demo-")) {
+        connectFirestoreEmulator(db, "localhost", 8080);
+      }
+
+      console.log("Connected to Firebase emulators");
+    } catch (error) {
+      console.log(
+        "Firebase emulators not available, using production services"
+      );
+    }
+  }
+
+  console.log("Firebase initialized successfully");
+} catch (error) {
+  console.error("Error initializing Firebase:", error);
+  throw new Error(
+    "Failed to initialize Firebase. Please check your configuration."
+  );
+}
+
+// Export Firebase services
+export { auth, db };
 export default app;
