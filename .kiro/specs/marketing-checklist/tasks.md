@@ -9,7 +9,7 @@
   - Add issue and pull request templates for GitHub
   - _Requirements: 7.1_
 
-- [ ] 2. Set up project structure and dependencies
+- [x] 2. Set up project structure and dependencies
   - Initialize Expo project with TypeScript template using pnpm
   - Install and configure Firebase SDK, React Navigation, and UI library dependencies using pnpm
   - Create directory structure for components, services, types, and screens

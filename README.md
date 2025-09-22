@@ -1,147 +1,96 @@
 # Swagr
 
-A React Native mobile application built with Expo that enables me to maintain a yearly contact lists that I use for handing out swag for my business. The app provides secure authentication, year-based contact organization, delivery tracking with timestamps, and comment management.
+A mobile iOS application for managing marketing contact checklists. Built with Expo and React Native.
 
 ## Features
 
-- 🔐 **Secure Authentication** - Firebase Authentication with email/password
-- 📅 **Year Management** - Organize contacts by marketing campaign years
-- 👥 **Contact Management** - Add, edit, and delete employee contacts
-- ✅ **Delivery Tracking** - Mark contacts as delivered with timestamps
-- 💬 **Comments System** - Add contextual notes to contacts
-- 📱 **iOS Optimized** - Native iOS experience with offline support
+- Secure user authentication with Firebase
+- Year-based contact organization
+- Contact management with delivery tracking
+- Comments and notes for each contact
+- Offline support with data synchronization
 
-## Tech Stack
+## Getting Started
 
-- **Frontend**: Expo SDK with React Native
-- **Package Manager**: pnpm
-- **Authentication**: Firebase Authentication
-- **Database**: Firebase Firestore
-- **State Management**: React Context API with useReducer
-- **Navigation**: React Navigation v6
-- **UI Components**: React Native Elements
-- **Date/Time**: date-fns library
-- **Language**: TypeScript
+### Prerequisites
 
-## Prerequisites
+- Node.js (v18 or later)
+- pnpm package manager
+- Expo CLI
+- iOS Simulator or physical iOS device
 
-Before you begin, ensure you have the following installed:
+### Installation
 
-- [Node.js](https://nodejs.org/) (v18 or later)
-- [pnpm](https://pnpm.io/) (v8 or later) - Fast, disk space efficient package manager
-- [Expo CLI](https://docs.expo.dev/get-started/installation/)
-- [iOS Simulator](https://docs.expo.dev/workflow/ios-simulator/) (for development)
-
-## Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/jbrinkman/Swagr.git
-   cd Swagr
-   ```
-
+1. Clone the repository
 2. Install dependencies:
 
    ```bash
    pnpm install
    ```
 
-3. Set up Firebase:
-   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   - Enable Authentication and Firestore Database
-   - Download the `google-services.json` (Android) and `GoogleService-Info.plist` (iOS) files
-   - Add your Firebase configuration to the project
+3. Configure Firebase:
+   - Update `src/config/firebase.ts` with your Firebase configuration
 
-4. Configure environment variables:
-
-   ```bash
-   cp .env.example .env
-   # Edit .env with your Firebase configuration
-   ```
-
-## Development
-
-Start the development server:
+### Running the App
 
 ```bash
+# Start the development server
 pnpm start
+
+# Run on iOS
+pnpm ios
+
+# Run on Android
+pnpm android
+
+# Run on web
+pnpm web
 ```
 
-Run on iOS simulator:
+### Testing
 
 ```bash
-pnpm ios
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+```
+
+### Linting
+
+```bash
+# Run ESLint
+pnpm lint
+
+# Type checking
+pnpm type-check
 ```
 
 ## Project Structure
 
 ```
 src/
-├── components/          # Reusable UI components
-├── screens/            # Screen components
-├── services/           # API and business logic services
-├── types/              # TypeScript type definitions
-├── utils/              # Utility functions
-├── contexts/           # React Context providers
-└── navigation/         # Navigation configuration
+├── components/     # Reusable UI components
+├── screens/        # Screen components
+├── services/       # API and business logic services
+├── types/          # TypeScript type definitions
+├── hooks/          # Custom React hooks
+├── utils/          # Utility functions
+├── contexts/       # React contexts
+└── config/         # Configuration files
 ```
 
-## Firebase Configuration
+## Technologies Used
 
-1. Create a Firebase project
-2. Enable Authentication with Email/Password provider
-3. Create a Firestore database with the following security rules:
-
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
-      
-      match /years/{yearId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-        
-        match /contacts/{contactId} {
-          allow read, write: if request.auth != null && request.auth.uid == userId;
-        }
-      }
-    }
-  }
-}
-```
-
-## Testing
-
-Run the test suite:
-
-```bash
-pnpm test
-```
-
-Run tests in watch mode:
-
-```bash
-pnpm test:watch
-```
-
-## Building
-
-Build for production:
-
-```bash
-pnpm build
-```
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+- **Expo SDK** - React Native development platform
+- **TypeScript** - Type-safe JavaScript
+- **Firebase** - Authentication and database
+- **React Navigation** - Navigation library
+- **React Native Paper** - Material Design UI component library
+- **@expo/vector-icons** - Icon library for Expo projects
+- **pnpm** - Fast, disk space efficient package manager
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Support
-
-If you encounter any issues or have questions, please file an issue on the [GitHub repository](https://github.com/jbrinkman/Swagr/issues).
+Private project - All rights reserved.

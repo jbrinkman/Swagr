@@ -36,7 +36,7 @@ graph TB
 - **Database**: Firebase Firestore
 - **State Management**: React Context API with useReducer
 - **Navigation**: React Navigation v6
-- **UI Components**: React Native Elements or NativeBase
+- **UI Components**: React Native Paper
 - **Date/Time**: date-fns library
 
 ## Components and Interfaces
