@@ -1,2 +1,2 @@
 // Context exports
-// Will be populated as contexts are created
+export { AuthProvider, useAuth } from "./AuthContext";

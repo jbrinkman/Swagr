@@ -1,2 +1,2 @@
 // Service exports
-// Services will be exported here as they are created
+export { authService, default as AuthService } from "./AuthService";

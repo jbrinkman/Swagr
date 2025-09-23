@@ -1,2 +1,2 @@
 // Screen exports
-// Will be populated as screens are created
+export { default as AuthScreen } from "./AuthScreen";
