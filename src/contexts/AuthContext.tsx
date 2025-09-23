@@ -5,7 +5,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import { User, AuthContextType, AuthenticationError } from "../types";
+import { User, AuthContextType } from "../types";
 import { authService } from "../services/AuthService";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,9 +34,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       const user = await authService.signIn(email, password);
       setUser(user);
-    } catch (error) {
-      // Re-throw the error so components can handle it
-      throw error;
     } finally {
       setLoading(false);
     }
@@ -47,9 +44,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       const user = await authService.signUp(email, password);
       setUser(user);
-    } catch (error) {
-      // Re-throw the error so components can handle it
-      throw error;
     } finally {
       setLoading(false);
     }
@@ -60,9 +54,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       await authService.signOut();
       setUser(null);
-    } catch (error) {
-      // Re-throw the error so components can handle it
-      throw error;
     } finally {
       setLoading(false);
     }

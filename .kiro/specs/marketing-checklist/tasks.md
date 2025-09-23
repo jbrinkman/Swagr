@@ -35,7 +35,7 @@
   - Write unit tests for AuthService methods
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [ ] 6. Implement local storage service for user preferences
+- [x] 6. Implement local storage service for user preferences
   - Create StorageService class using AsyncStorage for last selected year persistence
   - Add methods for getting and setting user preferences locally
   - Implement storage cleanup functionality

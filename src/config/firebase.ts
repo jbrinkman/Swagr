@@ -71,20 +71,17 @@ try {
   // Connect to emulators in development if available
   if (__DEV__ && process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATOR === "true") {
     try {
-      // Connect to Auth emulator
-      if (!auth._delegate._config.emulator) {
-        connectAuthEmulator(auth, "http://localhost:9099");
-      }
+      // Connect to Auth emulator (only if not already connected)
+      connectAuthEmulator(auth, "http://localhost:9099");
 
-      // Connect to Firestore emulator
-      if (!db._delegate._databaseId.projectId.includes("demo-")) {
-        connectFirestoreEmulator(db, "localhost", 8080);
-      }
+      // Connect to Firestore emulator (only if not already connected)
+      connectFirestoreEmulator(db, "localhost", 8080);
 
       console.log("Connected to Firebase emulators");
-    } catch (error) {
+    } catch {
+      // Emulator connection will throw if already connected or if emulators are not available
       console.log(
-        "Firebase emulators not available, using production services"
+        "Firebase emulators not available or already connected, using current configuration"
       );
     }
   }

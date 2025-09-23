@@ -4,6 +4,7 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
+  User as FirebaseUser,
 } from "firebase/auth";
 import { authService } from "../AuthService";
 import { AuthenticationError } from "../../types";
@@ -46,15 +47,25 @@ const mockUpdateProfile = updateProfile as jest.MockedFunction<
 >;
 
 describe("AuthService", () => {
-  const mockFirebaseUser = {
+  const mockFirebaseUser: Partial<FirebaseUser> = {
     uid: "test-uid",
     email: "test@example.com",
     displayName: "Test User",
+    emailVerified: true,
+    isAnonymous: false,
+    providerData: [],
+    refreshToken: "mock-refresh-token",
+    tenantId: null,
+    delete: jest.fn(),
+    getIdToken: jest.fn(),
+    getIdTokenResult: jest.fn(),
+    reload: jest.fn(),
+    toJSON: jest.fn(),
     metadata: {
       creationTime: "2024-01-01T00:00:00.000Z",
       lastSignInTime: "2024-01-01T00:00:00.000Z",
     },
-  };
+  } as Partial<FirebaseUser>;
 
   const expectedUser = {
     uid: "test-uid",
@@ -250,7 +261,9 @@ describe("AuthService", () => {
       const mockUnsubscribe = jest.fn();
 
       mockOnAuthStateChanged.mockImplementation((auth, callback) => {
-        callback(mockFirebaseUser);
+        if (typeof callback === "function") {
+          callback(mockFirebaseUser as FirebaseUser);
+        }
         return mockUnsubscribe;
       });
 
@@ -265,7 +278,9 @@ describe("AuthService", () => {
       const mockUnsubscribe = jest.fn();
 
       mockOnAuthStateChanged.mockImplementation((auth, callback) => {
-        callback(null);
+        if (typeof callback === "function") {
+          callback(null);
+        }
         return mockUnsubscribe;
       });
 

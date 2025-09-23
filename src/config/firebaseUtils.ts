@@ -7,8 +7,6 @@ import { doc, setDoc, serverTimestamp } from "firebase/firestore";
  */
 export const initializeUserDocument = async (user: User): Promise<void> => {
   try {
-    const userDocRef = doc(db, "users", user.uid);
-
     // Create user preferences document
     const preferencesDocRef = doc(db, "users", user.uid, "preferences", "main");
 
@@ -60,8 +58,8 @@ export const getFirebaseInfo = () => {
  */
 export const checkFirebaseConnection = async (): Promise<boolean> => {
   try {
-    // Try to get the current user (this will fail if Firebase isn't connected)
-    const currentUser = auth.currentUser;
+    // Try to access auth (this will fail if Firebase isn't connected)
+    void auth.currentUser;
 
     // If we can access auth without errors, Firebase is connected
     return true;

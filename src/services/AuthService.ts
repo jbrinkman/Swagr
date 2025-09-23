@@ -110,7 +110,7 @@ class AuthServiceImpl implements AuthService {
    */
   private handleAuthError(error: any): AuthenticationError {
     let message = "An authentication error occurred";
-    let code = error.code;
+    const code = error.code;
 
     switch (error.code) {
       case "auth/user-not-found":

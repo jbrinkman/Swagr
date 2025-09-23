@@ -103,11 +103,7 @@ const AuthScreen: React.FC = () => {
     setConfirmPassword("");
   };
 
-  const resetForm = () => {
-    setFormData({ email: "", password: "" });
-    setConfirmPassword("");
-    setErrors({});
-  };
+
 
   if (loading) {
     return (

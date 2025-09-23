@@ -1,6 +1,7 @@
 // Setup file for Jest tests
 // Global test environment setup
-global.__DEV__ = true;
+// __DEV__ is already declared by React Native types, just assign it
+(globalThis as any).__DEV__ = true;
 
 // Mock process.env for tests
 process.env.EXPO_PUBLIC_FIREBASE_API_KEY = "test-api-key";
