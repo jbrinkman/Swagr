@@ -58,7 +58,7 @@
   - Write unit tests for year management components
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
 
-- [ ] 9. Implement year selection and navigation
+- [x] 9. Implement year selection and navigation
   - Create year dropdown selector component
   - Add logic to show/hide dropdown based on available years
   - Implement year switching with data loading for selected year

@@ -1,2 +1,2 @@
 // Custom hooks exports
-// Will be populated as hooks are created
+export { useYearSelection } from "./useYearSelection";
