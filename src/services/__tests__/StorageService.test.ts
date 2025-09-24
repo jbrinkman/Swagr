@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { storageService } from "../StorageService";
+import StorageService from "../StorageService";
+
+const storageService = StorageService;
 
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () => ({

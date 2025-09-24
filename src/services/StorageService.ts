@@ -6,9 +6,23 @@ import { StorageService as IStorageService } from "../types";
  * Uses AsyncStorage for persistent data storage on the device
  */
 class StorageService implements IStorageService {
+  private static instance: StorageService;
+
   private static readonly STORAGE_KEYS = {
     LAST_SELECTED_YEAR: "@marketing_checklist:last_selected_year",
   } as const;
+
+  private constructor() {}
+
+  /**
+   * Get singleton instance of StorageService
+   */
+  public static getInstance(): StorageService {
+    if (!StorageService.instance) {
+      StorageService.instance = new StorageService();
+    }
+    return StorageService.instance;
+  }
 
   /**
    * Get the last selected year ID from local storage
@@ -59,6 +73,5 @@ class StorageService implements IStorageService {
   }
 }
 
-// Create and export a singleton instance
-export const storageService = new StorageService();
-export default StorageService;
+// Export singleton instance
+export default StorageService.getInstance();
