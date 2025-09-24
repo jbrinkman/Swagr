@@ -42,7 +42,7 @@
   - Write unit tests for StorageService methods
   - _Requirements: 3.5, 3.7_
 
-- [ ] 7. Create Firestore service for data operations
+- [x] 7. Create Firestore service for data operations
   - Implement FirestoreService class with CRUD operations for years and contacts
   - Add methods for user preferences management in Firestore
   - Implement error handling and offline support for Firestore operations
