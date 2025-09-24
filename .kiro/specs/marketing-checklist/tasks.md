@@ -49,7 +49,7 @@
   - Write unit tests for FirestoreService methods
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 3.1, 3.6, 4.3, 4.6_
 
-- [ ] 8. Build year management functionality
+- [x] 8. Build year management functionality
   - Create YearManagementScreen component with year list display
   - Implement add year functionality with form validation
   - Add delete year functionality with confirmation dialog
