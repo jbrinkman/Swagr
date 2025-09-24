@@ -82,7 +82,7 @@
   - Write unit tests for delivery tracking logic
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6_
 
-- [ ] 12. Implement comments system
+- [x] 12. Implement comments system
   - Create ContactDetailScreen for viewing and editing contact details
   - Add comments input field with text area component
   - Implement comments saving and loading from Firestore
