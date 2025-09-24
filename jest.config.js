@@ -1,5 +1,5 @@
 module.exports = {
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
     testMatch: [
         '**/__tests__/**/*.(ts|tsx|js)',
         '**/*.(test|spec).(ts|tsx|js)'
@@ -13,18 +13,23 @@ module.exports = {
                     modules: 'commonjs'
                 }],
                 '@babel/preset-typescript',
+                '@babel/preset-react',
             ],
         }],
+        '^.+\\.(js|jsx)$': 'babel-jest',
     },
     transformIgnorePatterns: [
-        'node_modules/(?!(@babel|babel-jest)/)'
+        'node_modules/(?!(react-native|@react-native|react-native-paper|react-native-vector-icons|@expo|expo|@react-navigation|react-native-safe-area-context|react-native-screens|react-native-gesture-handler)/)'
     ],
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
         // Mock problematic modules
         '^expo/(.*)$': '<rootDir>/src/__mocks__/expo.js',
         '^firebase/(.*)$': '<rootDir>/src/__mocks__/firebase.js',
+        // Mock React Native modules
+        '^react-native$': '<rootDir>/src/__mocks__/react-native.js',
     },
+    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
     globals: {
         __DEV__: true,
     },
