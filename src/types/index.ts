@@ -104,15 +104,19 @@ export enum ErrorType {
 export interface AppError extends Error {
   type: ErrorType;
   code?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export class AuthenticationError extends Error implements AppError {
   type = ErrorType.AUTHENTICATION as const;
   code?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 
-  constructor(message: string, code?: string, details?: Record<string, any>) {
+  constructor(
+    message: string,
+    code?: string,
+    details?: Record<string, unknown>
+  ) {
     super(message);
     this.name = "AuthenticationError";
     this.code = code;
@@ -123,9 +127,13 @@ export class AuthenticationError extends Error implements AppError {
 export class ValidationError extends Error implements AppError {
   type = ErrorType.VALIDATION as const;
   code?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 
-  constructor(message: string, code?: string, details?: Record<string, any>) {
+  constructor(
+    message: string,
+    code?: string,
+    details?: Record<string, unknown>
+  ) {
     super(message);
     this.name = "ValidationError";
     this.code = code;
@@ -136,9 +144,13 @@ export class ValidationError extends Error implements AppError {
 export class NetworkError extends Error implements AppError {
   type = ErrorType.NETWORK as const;
   code?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 
-  constructor(message: string, code?: string, details?: Record<string, any>) {
+  constructor(
+    message: string,
+    code?: string,
+    details?: Record<string, unknown>
+  ) {
     super(message);
     this.name = "NetworkError";
     this.code = code;
@@ -149,9 +161,13 @@ export class NetworkError extends Error implements AppError {
 export class PermissionError extends Error implements AppError {
   type = ErrorType.PERMISSION as const;
   code?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 
-  constructor(message: string, code?: string, details?: Record<string, any>) {
+  constructor(
+    message: string,
+    code?: string,
+    details?: Record<string, unknown>
+  ) {
     super(message);
     this.name = "PermissionError";
     this.code = code;
@@ -162,9 +178,13 @@ export class PermissionError extends Error implements AppError {
 export class NotFoundError extends Error implements AppError {
   type = ErrorType.NOT_FOUND as const;
   code?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 
-  constructor(message: string, code?: string, details?: Record<string, any>) {
+  constructor(
+    message: string,
+    code?: string,
+    details?: Record<string, unknown>
+  ) {
     super(message);
     this.name = "NotFoundError";
     this.code = code;

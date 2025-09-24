@@ -23,7 +23,7 @@ class AuthServiceImpl implements AuthService {
       const firebaseUser = userCredential.user;
 
       return this.mapFirebaseUserToUser(firebaseUser);
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error);
     }
   }
@@ -48,7 +48,7 @@ class AuthServiceImpl implements AuthService {
       }
 
       return this.mapFirebaseUserToUser(firebaseUser);
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error);
     }
   }
@@ -59,7 +59,7 @@ class AuthServiceImpl implements AuthService {
   async signOut(): Promise<void> {
     try {
       await firebaseSignOut(auth);
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw this.handleAuthError(error);
     }
   }
@@ -108,11 +108,19 @@ class AuthServiceImpl implements AuthService {
   /**
    * Handle Firebase authentication errors and convert to our error types
    */
-  private handleAuthError(error: any): AuthenticationError {
+  private handleAuthError(error: unknown): AuthenticationError {
     let message = "An authentication error occurred";
-    const code = error.code;
 
-    switch (error.code) {
+    // Type guard to check if error has the expected structure
+    const isFirebaseError = (
+      err: unknown
+    ): err is { code: string; message?: string } => {
+      return typeof err === "object" && err !== null && "code" in err;
+    };
+
+    const code = isFirebaseError(error) ? error.code : "unknown";
+
+    switch (code) {
       case "auth/user-not-found":
         message = "No account found with this email address";
         break;
@@ -141,7 +149,12 @@ class AuthServiceImpl implements AuthService {
         message = "Invalid email or password";
         break;
       default:
-        message = error.message || message;
+        // For errors without codes or unknown codes, use the original message if available
+        if (isFirebaseError(error) && error.message) {
+          message = error.message;
+        } else if (error instanceof Error && error.message) {
+          message = error.message;
+        }
     }
 
     return new AuthenticationError(message, code, { originalError: error });

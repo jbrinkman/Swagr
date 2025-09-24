@@ -7,7 +7,6 @@ import {
   getDocs,
   getDoc,
   query,
-  where,
   orderBy,
   serverTimestamp,
   enableNetwork,
@@ -71,35 +70,48 @@ export class FirestoreService implements IFirestoreService {
   /**
    * Handle Firestore errors and convert to appropriate error types
    */
-  private handleFirestoreError(error: any, operation: string): never {
+  private handleFirestoreError(error: unknown, operation: string): never {
     console.error(`Firestore ${operation} error:`, error);
 
-    if (error.code === "permission-denied") {
-      throw new PermissionError(`Access denied for ${operation}`, error.code, {
+    // Type guard to check if error has the expected structure
+    const isFirestoreError = (
+      err: unknown
+    ): err is { code: string; message?: string } => {
+      return typeof err === "object" && err !== null && "code" in err;
+    };
+
+    const errorCode = isFirestoreError(error) ? error.code : "unknown";
+    const errorMessage =
+      isFirestoreError(error) && error.message
+        ? error.message
+        : "Unknown error";
+
+    if (errorCode === "permission-denied") {
+      throw new PermissionError(`Access denied for ${operation}`, errorCode, {
         operation,
       });
     }
 
-    if (error.code === "not-found") {
+    if (errorCode === "not-found") {
       throw new NotFoundError(
         `Resource not found for ${operation}`,
-        error.code,
+        errorCode,
         { operation }
       );
     }
 
-    if (error.code === "unavailable" || error.code === "deadline-exceeded") {
+    if (errorCode === "unavailable" || errorCode === "deadline-exceeded") {
       throw new NetworkError(
         `Network error during ${operation}. Please check your connection.`,
-        error.code,
+        errorCode,
         { operation }
       );
     }
 
-    if (error.code === "invalid-argument") {
+    if (errorCode === "invalid-argument") {
       throw new ValidationError(
         `Invalid data provided for ${operation}`,
-        error.code,
+        errorCode,
         { operation }
       );
     }
@@ -107,8 +119,8 @@ export class FirestoreService implements IFirestoreService {
     // Generic network error for other cases
     throw new NetworkError(
       `Failed to ${operation}. Please try again.`,
-      error.code || "unknown",
-      { operation, originalError: error.message }
+      errorCode,
+      { operation, originalError: errorMessage }
     );
   }
 
@@ -229,7 +241,7 @@ export class FirestoreService implements IFirestoreService {
       const yearRef = doc(db, "users", userId, "years", yearId);
 
       // Prepare update data, excluding read-only fields
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         updatedAt: serverTimestamp(),
       };
 
@@ -417,7 +429,7 @@ export class FirestoreService implements IFirestoreService {
       );
 
       // Prepare update data, excluding read-only fields
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         updatedAt: serverTimestamp(),
       };
 
@@ -547,7 +559,7 @@ export class FirestoreService implements IFirestoreService {
 
       const preferencesRef = doc(db, "users", userId, "preferences", "main");
 
-      const updateData: any = {
+      const updateData: Record<string, unknown> = {
         userId,
         updatedAt: serverTimestamp(),
       };
