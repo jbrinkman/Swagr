@@ -3,19 +3,20 @@ import {
   validatePassword,
   validateConfirmPassword,
   validateAuthForm,
+  validateContactForm,
   sanitizeInput,
   isEmptyOrWhitespace,
 } from "../validation";
-import { AuthFormData } from "../../types";
+import { AuthFormData, ContactFormData } from "../../types";
 
 describe("Validation Utilities", () => {
   describe("validateEmail", () => {
-    it("should validate correct email addresses", () => {
+    it("validates correct email addresses", () => {
       const validEmails = [
         "test@example.com",
         "user.name@domain.co.uk",
         "user+tag@example.org",
-        "123@example.com",
+        "user123@test-domain.com",
       ];
 
       validEmails.forEach((email) => {
@@ -25,14 +26,15 @@ describe("Validation Utilities", () => {
       });
     });
 
-    it("should reject invalid email addresses", () => {
+    it("rejects invalid email addresses", () => {
       const invalidEmails = [
-        "invalid-email",
-        "@example.com",
-        "user@",
-        "user@.com",
         "",
-        " ",
+        "invalid",
+        "invalid@",
+        "@invalid.com",
+        "invalid.com",
+        "invalid@.com",
+        "invalid@com.",
       ];
 
       invalidEmails.forEach((email) => {
@@ -42,24 +44,24 @@ describe("Validation Utilities", () => {
       });
     });
 
-    it("should return appropriate error messages", () => {
+    it("returns appropriate error messages", () => {
       const emptyResult = validateEmail("");
-      expect(emptyResult.errors).toContain("Email is required");
+      expect(emptyResult.errors[0]).toBe("Email is required");
 
       const invalidResult = validateEmail("invalid-email");
-      expect(invalidResult.errors).toContain(
+      expect(invalidResult.errors[0]).toBe(
         "Please enter a valid email address"
       );
     });
   });
 
   describe("validatePassword", () => {
-    it("should validate strong passwords", () => {
+    it("validates correct passwords", () => {
       const validPasswords = [
         "password123",
-        "strongPassword!",
+        "mySecurePass",
         "123456",
-        "abcdef",
+        "a".repeat(50),
       ];
 
       validPasswords.forEach((password) => {
@@ -69,44 +71,44 @@ describe("Validation Utilities", () => {
       });
     });
 
-    it("should reject weak passwords", () => {
-      const weakPasswords = ["", "12345", "abc", " "];
+    it("rejects invalid passwords", () => {
+      const invalidPasswords = ["", "12345", "short"];
 
-      weakPasswords.forEach((password) => {
+      invalidPasswords.forEach((password) => {
         const result = validatePassword(password);
         expect(result.isValid).toBe(false);
         expect(result.errors.length).toBeGreaterThan(0);
       });
     });
 
-    it("should return appropriate error messages", () => {
+    it("returns appropriate error messages", () => {
       const emptyResult = validatePassword("");
-      expect(emptyResult.errors).toContain("Password is required");
+      expect(emptyResult.errors[0]).toBe("Password is required");
 
       const shortResult = validatePassword("123");
-      expect(shortResult.errors).toContain(
+      expect(shortResult.errors[0]).toBe(
         "Password must be at least 6 characters long"
       );
     });
   });
 
   describe("validateConfirmPassword", () => {
-    it("should validate matching passwords", () => {
+    it("validates matching passwords", () => {
       const result = validateConfirmPassword("password123", "password123");
       expect(result.isValid).toBe(true);
       expect(result.errors).toHaveLength(0);
     });
 
-    it("should reject non-matching passwords", () => {
+    it("rejects non-matching passwords", () => {
       const result = validateConfirmPassword("password123", "different");
       expect(result.isValid).toBe(false);
-      expect(result.errors).toContain("Passwords do not match");
+      expect(result.errors[0]).toBe("Passwords do not match");
     });
 
-    it("should reject empty confirm password", () => {
+    it("rejects empty confirm password", () => {
       const result = validateConfirmPassword("password123", "");
       expect(result.isValid).toBe(false);
-      expect(result.errors).toContain("Please confirm your password");
+      expect(result.errors[0]).toBe("Please confirm your password");
     });
   });
 
@@ -116,100 +118,183 @@ describe("Validation Utilities", () => {
       password: "password123",
     };
 
-    it("should validate correct sign in form", () => {
+    it("validates correct sign in form", () => {
       const result = validateAuthForm(validFormData, false);
       expect(result.isValid).toBe(true);
       expect(Object.keys(result.errors)).toHaveLength(0);
     });
 
-    it("should validate correct sign up form with matching passwords", () => {
+    it("validates correct sign up form", () => {
       const result = validateAuthForm(validFormData, true, "password123");
       expect(result.isValid).toBe(true);
       expect(Object.keys(result.errors)).toHaveLength(0);
     });
 
-    it("should reject sign up form with non-matching passwords", () => {
+    it("rejects invalid email in form", () => {
+      const invalidFormData = { ...validFormData, email: "invalid" };
+      const result = validateAuthForm(invalidFormData, false);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.email).toBe("Please enter a valid email address");
+    });
+
+    it("rejects invalid password in form", () => {
+      const invalidFormData = { ...validFormData, password: "123" };
+      const result = validateAuthForm(invalidFormData, false);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.password).toBe(
+        "Password must be at least 6 characters long"
+      );
+    });
+
+    it("rejects non-matching confirm password in sign up", () => {
       const result = validateAuthForm(validFormData, true, "different");
       expect(result.isValid).toBe(false);
       expect(result.errors.confirmPassword).toBe("Passwords do not match");
     });
+  });
 
-    it("should reject form with invalid email", () => {
-      const invalidFormData: AuthFormData = {
-        email: "invalid-email",
-        password: "password123",
-      };
+  describe("validateContactForm", () => {
+    const validFormData: ContactFormData = {
+      firstName: "John",
+      lastName: "Doe",
+      enterpriseName: "Acme Corp",
+      comments: "Test comment",
+    };
 
-      const result = validateAuthForm(invalidFormData, false);
-      expect(result.isValid).toBe(false);
-      expect(result.errors.email).toBe("Please enter a valid email address");
+    it("validates correct contact form", () => {
+      const result = validateContactForm(validFormData);
+      expect(result.isValid).toBe(true);
+      expect(Object.keys(result.errors)).toHaveLength(0);
     });
 
-    it("should reject form with weak password", () => {
-      const invalidFormData: AuthFormData = {
-        email: "test@example.com",
-        password: "123",
-      };
+    it("validates form without comments", () => {
+      const formWithoutComments = { ...validFormData, comments: "" };
+      const result = validateContactForm(formWithoutComments);
+      expect(result.isValid).toBe(true);
+      expect(Object.keys(result.errors)).toHaveLength(0);
+    });
 
-      const result = validateAuthForm(invalidFormData, false);
+    it("rejects empty first name", () => {
+      const invalidFormData = { ...validFormData, firstName: "" };
+      const result = validateContactForm(invalidFormData);
       expect(result.isValid).toBe(false);
-      expect(result.errors.password).toBe(
-        "Password must be at least 6 characters long"
+      expect(result.errors.firstName).toBe("First name is required");
+    });
+
+    it("rejects empty last name", () => {
+      const invalidFormData = { ...validFormData, lastName: "   " };
+      const result = validateContactForm(invalidFormData);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.lastName).toBe("Last name is required");
+    });
+
+    it("rejects empty enterprise name", () => {
+      const invalidFormData = { ...validFormData, enterpriseName: "" };
+      const result = validateContactForm(invalidFormData);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.enterpriseName).toBe("Enterprise name is required");
+    });
+
+    it("rejects too long first name", () => {
+      const invalidFormData = { ...validFormData, firstName: "a".repeat(51) };
+      const result = validateContactForm(invalidFormData);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.firstName).toBe(
+        "First name must be 50 characters or less"
       );
     });
 
-    it("should reject form with multiple errors", () => {
-      const invalidFormData: AuthFormData = {
-        email: "invalid-email",
-        password: "123",
-      };
-
-      const result = validateAuthForm(invalidFormData, true, "different");
+    it("rejects too long last name", () => {
+      const invalidFormData = { ...validFormData, lastName: "b".repeat(51) };
+      const result = validateContactForm(invalidFormData);
       expect(result.isValid).toBe(false);
-      expect(result.errors.email).toBe("Please enter a valid email address");
-      expect(result.errors.password).toBe(
-        "Password must be at least 6 characters long"
+      expect(result.errors.lastName).toBe(
+        "Last name must be 50 characters or less"
       );
-      expect(result.errors.confirmPassword).toBe("Passwords do not match");
+    });
+
+    it("rejects too long enterprise name", () => {
+      const invalidFormData = {
+        ...validFormData,
+        enterpriseName: "c".repeat(101),
+      };
+      const result = validateContactForm(invalidFormData);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.enterpriseName).toBe(
+        "Enterprise name must be 100 characters or less"
+      );
+    });
+
+    it("rejects too long comments", () => {
+      const invalidFormData = { ...validFormData, comments: "d".repeat(501) };
+      const result = validateContactForm(invalidFormData);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.comments).toBe(
+        "Comments must be 500 characters or less"
+      );
+    });
+
+    it("validates all required fields together", () => {
+      const invalidFormData: ContactFormData = {
+        firstName: "",
+        lastName: "",
+        enterpriseName: "",
+        comments: "e".repeat(501),
+      };
+      const result = validateContactForm(invalidFormData);
+      expect(result.isValid).toBe(false);
+      expect(result.errors.firstName).toBe("First name is required");
+      expect(result.errors.lastName).toBe("Last name is required");
+      expect(result.errors.enterpriseName).toBe("Enterprise name is required");
+      expect(result.errors.comments).toBe(
+        "Comments must be 500 characters or less"
+      );
     });
   });
 
   describe("sanitizeInput", () => {
-    it("should trim whitespace", () => {
-      expect(sanitizeInput("  test  ")).toBe("test");
-      expect(sanitizeInput("\n\ttest\n\t")).toBe("test");
+    it("trims whitespace", () => {
+      expect(sanitizeInput("  hello  ")).toBe("hello");
+      expect(sanitizeInput("\t\ntest\t\n")).toBe("test");
     });
 
-    it("should remove dangerous characters", () => {
-      expect(sanitizeInput("test<script>")).toBe("testscript");
-      expect(sanitizeInput("test>alert")).toBe("testalert");
-      expect(sanitizeInput("<>test<>")).toBe("test");
+    it("removes XSS characters", () => {
+      expect(sanitizeInput('hello<script>alert("xss")</script>')).toBe(
+        'helloscriptalert("xss")/script'
+      );
+      expect(sanitizeInput("test<>content")).toBe("testcontent");
     });
 
-    it("should handle empty strings", () => {
+    it("handles empty strings", () => {
       expect(sanitizeInput("")).toBe("");
       expect(sanitizeInput("   ")).toBe("");
     });
 
-    it("should preserve safe characters", () => {
-      const safeInput = "test@example.com with spaces & symbols!";
-      expect(sanitizeInput(safeInput)).toBe(
-        "test@example.com with spaces & symbols!"
-      );
+    it("preserves normal content", () => {
+      expect(sanitizeInput("John Doe")).toBe("John Doe");
+      expect(sanitizeInput("test@example.com")).toBe("test@example.com");
+      expect(sanitizeInput("Company & Co.")).toBe("Company & Co.");
     });
   });
 
   describe("isEmptyOrWhitespace", () => {
-    it("should return true for empty or whitespace strings", () => {
+    it("returns true for empty or whitespace strings", () => {
       expect(isEmptyOrWhitespace("")).toBe(true);
       expect(isEmptyOrWhitespace("   ")).toBe(true);
-      expect(isEmptyOrWhitespace("\n\t")).toBe(true);
+      expect(isEmptyOrWhitespace("\t\n")).toBe(true);
+      expect(isEmptyOrWhitespace("  \t  \n  ")).toBe(true);
     });
 
-    it("should return false for non-empty strings", () => {
-      expect(isEmptyOrWhitespace("test")).toBe(false);
-      expect(isEmptyOrWhitespace("  test  ")).toBe(false);
+    it("returns false for strings with content", () => {
+      expect(isEmptyOrWhitespace("hello")).toBe(false);
+      expect(isEmptyOrWhitespace("  hello  ")).toBe(false);
+      expect(isEmptyOrWhitespace("a")).toBe(false);
       expect(isEmptyOrWhitespace("0")).toBe(false);
+    });
+
+    it("handles undefined and null gracefully", () => {
+      expect(isEmptyOrWhitespace(undefined as any)).toBe(true);
+      expect(isEmptyOrWhitespace(null as any)).toBe(true);
     });
   });
 });

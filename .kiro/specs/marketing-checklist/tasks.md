@@ -66,7 +66,7 @@
   - Write unit tests for year selection logic
   - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.7_
 
-- [ ] 10. Create contact management screens and components
+- [x] 10. Create contact management screens and components
   - Implement ContactListScreen with FlatList for contact display
   - Create ContactFormScreen for adding and editing contacts
   - Add contact validation for required fields (firstName, lastName, enterpriseName)

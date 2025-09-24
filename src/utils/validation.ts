@@ -1,4 +1,4 @@
-import { ValidationResult, AuthFormData } from "../types";
+import { ValidationResult, AuthFormData, ContactFormData } from "../types";
 
 /**
  * Email validation regex pattern
@@ -118,4 +118,47 @@ export const sanitizeInput = (input: string): string => {
  */
 export const isEmptyOrWhitespace = (str: string): boolean => {
   return !str || str.trim().length === 0;
+};
+
+/**
+ * Validate contact form data
+ */
+export const validateContactForm = (
+  formData: ContactFormData
+): {
+  isValid: boolean;
+  errors: Partial<Record<keyof ContactFormData, string>>;
+} => {
+  const errors: Partial<Record<keyof ContactFormData, string>> = {};
+
+  // Validate first name
+  if (isEmptyOrWhitespace(formData.firstName)) {
+    errors.firstName = "First name is required";
+  } else if (formData.firstName.trim().length > 50) {
+    errors.firstName = "First name must be 50 characters or less";
+  }
+
+  // Validate last name
+  if (isEmptyOrWhitespace(formData.lastName)) {
+    errors.lastName = "Last name is required";
+  } else if (formData.lastName.trim().length > 50) {
+    errors.lastName = "Last name must be 50 characters or less";
+  }
+
+  // Validate enterprise name
+  if (isEmptyOrWhitespace(formData.enterpriseName)) {
+    errors.enterpriseName = "Enterprise name is required";
+  } else if (formData.enterpriseName.trim().length > 100) {
+    errors.enterpriseName = "Enterprise name must be 100 characters or less";
+  }
+
+  // Validate comments (optional but has length limit)
+  if (formData.comments && formData.comments.trim().length > 500) {
+    errors.comments = "Comments must be 500 characters or less";
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+  };
 };
