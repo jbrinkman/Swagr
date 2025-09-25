@@ -71,19 +71,26 @@ try {
   // Connect to emulators in development if available
   if (__DEV__ && process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATOR === "true") {
     try {
-      // Connect to Auth emulator (only if not already connected)
-      connectAuthEmulator(auth, "http://localhost:9099");
+      // Connect to Auth emulator (will throw if already connected)
+      connectAuthEmulator(auth, "http://localhost:9099", {
+        disableWarnings: true,
+      });
+      console.log("🔧 Connected to Firebase Auth emulator");
 
-      // Connect to Firestore emulator (only if not already connected)
+      // Connect to Firestore emulator (will throw if already connected)
       connectFirestoreEmulator(db, "localhost", 8080);
+      console.log("🔧 Connected to Firebase Firestore emulator");
 
-      console.log("Connected to Firebase emulators");
-    } catch {
+      console.log("✅ Firebase emulators connected successfully");
+    } catch (error) {
       // Emulator connection will throw if already connected or if emulators are not available
-      console.log(
-        "Firebase emulators not available or already connected, using current configuration"
+      console.warn(
+        "⚠️ Firebase emulators not available or already connected, using production Firebase"
       );
+      console.warn("Error details:", error);
     }
+  } else if (__DEV__) {
+    console.log("🌐 Using production Firebase (emulators disabled)");
   }
 
   console.log("Firebase initialized successfully");

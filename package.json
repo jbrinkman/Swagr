@@ -21,7 +21,22 @@
     "init-db-real": "tsx scripts/init-database-standalone.ts",
     "deploy-rules": "firebase deploy --only firestore:rules",
     "deploy-indexes": "firebase deploy --only firestore:indexes",
-    "deploy-db": "firebase deploy --only firestore"
+    "deploy-db": "firebase deploy --only firestore",
+    "emulators:start": "firebase emulators:start",
+    "emulators:start:detached": "firebase emulators:start --only auth,firestore,ui",
+    "emulators:stop": "firebase emulators:stop",
+    "emulators:export": "firebase emulators:export ./emulator-data",
+    "emulators:import": "firebase emulators:start --import=./emulator-data",
+    "emulators:reset": "node scripts/emulator-reset.js",
+    "emulators:seed": "node scripts/emulator-seed.js",
+    "emulators:cleanup": "node scripts/emulator-cleanup.js",
+    "emulators:cleanup:quick": "node scripts/emulator-cleanup.js quick",
+    "emulators:cleanup:full": "node scripts/emulator-cleanup.js full",
+    "emulators:test-reset": "node scripts/emulator-cleanup.js test-reset",
+    "test:emulators": "firebase emulators:exec --only auth,firestore 'pnpm test'",
+    "test:integration": "jest --config jest.integration.config.js",
+    "test:integration:emulators": "firebase emulators:exec --only auth,firestore 'pnpm test:integration'",
+    "test:integration:watch": "jest --config jest.integration.config.js --watch"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
